@@ -1,0 +1,18 @@
+﻿{
+  "manifest_version": 3,
+  "name": "Cody Exporter",
+  "version": "1.0",
+  "description": "Export Cody chat conversations",
+  "permissions": [
+    "activeTab"
+  ],
+  "browser_action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://sourcegraph.com/cody/chat*"],
+      "js": ["content_script.js"]
+    }
+  ]
+}

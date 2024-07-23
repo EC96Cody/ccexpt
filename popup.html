@@ -1,0 +1,34 @@
+﻿document.addEventListener('DOMContentLoaded', function() {
+  const extractButton = document.getElementById('extractButton');
+  const downloadButton = document.getElementById('downloadButton');
+  const statusDiv = document.getElementById('status');
+
+  extractButton.addEventListener('click', function() {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, {action: "extractChats"}, function(response) {
+        if (chrome.runtime.lastError) {
+          statusDiv.textContent = "Error: " + chrome.runtime.lastError.message;
+        } else if (response && response.chats) {
+          statusDiv.textContent = `Extracted ${response.chats.length} messages.`;
+          downloadButton.style.display = 'block';
+        } else {
+          statusDiv.textContent = "No chats found or error occurred.";
+        }
+      });
+    });
+  });
+
+  downloadButton.addEventListener('click', function() {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, {action: "downloadChats"}, function(response) {
+        if (chrome.runtime.lastError) {
+          statusDiv.textContent = "Error: " + chrome.runtime.lastError.message;
+        } else if (response && response.success) {
+          statusDiv.textContent = "Chats downloaded successfully.";
+        } else {
+          statusDiv.textContent = "Error downloading chats.";
+        }
+      });
+    });
+  });
+});
